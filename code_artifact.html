@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大一新生適應講座：心靈咖啡館</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans TC', 'sans-serif'],
+                    },
+                    colors: {
+                        morandi: {
+                            bg: '#F7F7F5',       /* 溫暖燕麥白 */
+                            text: '#4A4C4B',     /* 柔和深灰 */
+                            blue: '#9DB2BF',     /* 莫蘭迪霧藍 */
+                            green: '#9CB2A1',    /* 莫蘭迪鼠尾草綠 */
+                            pink: '#C7AFA0',     /* 莫蘭迪粉褐 */
+                            yellow: '#D5CDB4',   /* 莫蘭迪麥黃 */
+                            card: '#FFFFFF',
+                            border: '#E8E8E5'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #E2E2E2;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            color: #4A4C4B;
+        }
+
+        .presentation-wrapper {
+            position: relative;
+            width: 100vw;
+            max-width: 1280px;
+            aspect-ratio: 16 / 9;
+            background-color: #F7F7F5;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Responsive scaling for smaller screens */
+        @media (max-width: 1280px) {
+            .presentation-wrapper {
+                width: 100%;
+                height: 100vh;
+                aspect-ratio: auto;
+            }
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            transform: translateY(10px);
+            display: flex;
+            flex-direction: column;
+            padding: 4rem;
+            box-sizing: border-box;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+            z-index: 10;
+        }
+
+        .nav-button {
+            position: absolute;
+            bottom: 2rem;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(4px);
+            border: 1px solid #E8E8E5;
+            color: #4A4C4B;
+            padding: 0.75rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            z-index: 50;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .nav-button:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: scale(1.05);
+        }
+
+        .nav-prev { left: 2rem; }
+        .nav-next { right: 2rem; }
+
+        .progress-bar-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: #E8E8E5;
+            z-index: 50;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: #9DB2BF;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.875rem;
+            color: #9CA3AF;
+            letter-spacing: 0.1em;
+            z-index: 50;
+        }
+
+        /* Breathing Animation */
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); opacity: 0.4; }
+            50% { transform: scale(2.5); opacity: 0.1; }
+        }
+        .breathe-circle {
+            animation: breathe 8s infinite ease-in-out;
+        }
+        
+        /* Utility for minimalist elements */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid #E8E8E5;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-morandi-text">
+
+    <div class="presentation-wrapper" id="presentation">
+        
+        <!-- Slide 1: 標題頁 -->
+        <div class="slide active items-center justify-center text-center">
+            <div class="w-24 h-24 rounded-full bg-morandi-yellow/30 flex items-center justify-center mb-8">
+                <i data-lucide="coffee" class="w-12 h-12 text-morandi-yellow"></i>
+            </div>
+            <h2 class="text-xl tracking-[0.2em] text-gray-500 mb-4 font-light">大一新生適應講座</h2>
+            <h1 class="text-6xl font-bold text-morandi-text mb-6 tracking-wide">心靈咖啡館</h1>
+            <p class="text-2xl text-gray-400 font-light tracking-widest mt-4">歡迎來到大學的第一站</p>
+        </div>
+
+        <!-- Slide 2: 講者介紹 -->
+        <div class="slide justify-center">
+            <div class="flex max-w-5xl mx-auto w-full items-center gap-16">
+                <!-- 講者照片框 -->
+                <div class="w-1/3 flex justify-center">
+                    <div class="w-64 h-64 rounded-full bg-morandi-text/5 border-4 border-white shadow-xl flex items-center justify-center overflow-hidden relative">
+                        <img src="speaker.jpg" alt="盧浩昂心理師" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/F7F7F5/9DB2BF?text=Photo';">
+                    </div>
+                </div>
+                <!-- 講者資訊 -->
+                <div class="w-2/3">
+                    <div class="inline-block px-4 py-1 rounded-full bg-morandi-green/20 text-morandi-green font-medium tracking-wider text-sm mb-4">
+                        諮商心理師
+                    </div>
+                    <h2 class="text-4xl font-bold mb-8">盧浩昂</h2>
+                    <div class="glass-card p-8 rounded-2xl relative">
+                        <i data-lucide="quote" class="absolute top-6 left-6 w-8 h-8 text-morandi-blue/20"></i>
+                        <p class="text-xl leading-relaxed text-gray-600 pl-8 font-light">
+                            「讓我們聊聊關於心情變化的大小事。」<br><br>
+                            「大一的時候，我曾經因為不知道怎麼跟同學打好關係而覺得苦惱... 其實，那些看似微不足道的煩惱，都是我們適應新生活的必經之路。」
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: 互動投票 -->
+        <div class="slide justify-center items-center text-center">
+            <h2 class="text-3xl font-light mb-8 tracking-wider">開學到現在，你內心的天氣最常是哪一種？</h2>
+            
+            <div class="w-full max-w-5xl h-[60vh] glass-card rounded-3xl overflow-hidden relative shadow-sm border border-gray-200">
+                <div class="absolute inset-0 flex flex-col items-center justify-center -z-10 bg-white/50">
+                    <i data-lucide="loader" class="w-10 h-10 mb-4 text-gray-300 animate-spin"></i>
+                    <p class="text-gray-500 tracking-widest">載入即時投票系統中...</p>
+                </div>
+                <!-- Slido Embed -->
+                <iframe 
+                    src="https://wall.sli.do/event/tkbR6iQHwzGGw8XRxkaTMP" 
+                    width="100%" 
+                    height="100%" 
+                    style="border: none;"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+
+        <!-- Slide 4: 核心觀念 -->
+        <div class="slide justify-center items-center text-center">
+            <div class="relative w-full max-w-3xl">
+                <div class="absolute -top-12 -left-12 opacity-50"><i data-lucide="cloud" class="w-32 h-32 text-morandi-blue"></i></div>
+                <div class="absolute -bottom-12 -right-12 opacity-50"><i data-lucide="sun" class="w-32 h-32 text-morandi-yellow"></i></div>
+                
+                <h2 class="text-5xl font-bold mb-8 leading-tight">管理壓力的第一步<br>是<span class="text-morandi-blue">「看見天氣」</span></h2>
+                <p class="text-2xl text-gray-500 font-light tracking-wide">
+                    其實，不只有你心裡正在下雨或起霧。<br>
+                    今天我們不急著放晴，先學會辨識壓力。
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 5: 今日默契 -->
+        <div class="slide justify-center">
+            <h2 class="text-3xl font-bold mb-2 text-center tracking-wider">建立心理安全感</h2>
+            <p class="text-center text-gray-400 mb-12 tracking-widest">我們今天的對話默契：反思式聆聽</p>
+            
+            <div class="grid grid-cols-3 gap-8 max-w-5xl mx-auto w-full">
+                <div class="glass-card p-10 rounded-3xl flex flex-col items-center text-center">
+                    <div class="w-20 h-20 rounded-full bg-morandi-green/20 flex items-center justify-center mb-6">
+                        <i data-lucide="ear" class="w-10 h-10 text-morandi-green"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">專注聆聽</h3>
+                    <p class="text-gray-500 font-light">放下手機與雜念，<br>把注意力留給說話的人。</p>
+                </div>
+                <div class="glass-card p-10 rounded-3xl flex flex-col items-center text-center">
+                    <div class="w-20 h-20 rounded-full bg-morandi-pink/20 flex items-center justify-center mb-6">
+                        <i data-lucide="message-square-off" class="w-10 h-10 text-morandi-pink"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">不急著回應</h3>
+                    <p class="text-gray-500 font-light">不追問細節、不打斷，<br>讓對方把感受說完。</p>
+                </div>
+                <div class="glass-card p-10 rounded-3xl flex flex-col items-center text-center">
+                    <div class="w-20 h-20 rounded-full bg-morandi-blue/20 flex items-center justify-center mb-6">
+                        <i data-lucide="shield-x" class="w-10 h-10 text-morandi-blue"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">不給予評價</h3>
+                    <p class="text-gray-500 font-light">收起建議與是非對錯，<br>這裡只有純粹的接納。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: 活動說明 -->
+        <div class="slide justify-center items-center">
+            <h2 class="text-xl tracking-[0.2em] text-gray-400 mb-4">Activity</h2>
+            <h1 class="text-4xl font-bold mb-12 tracking-wider">畫布漂流與視覺對話</h1>
+            
+            <div class="glass-card p-12 rounded-3xl w-full max-w-3xl flex items-center justify-around">
+                <div class="flex flex-col items-center text-center">
+                    <i data-lucide="file" class="w-16 h-16 text-gray-300 mb-4"></i>
+                    <p class="text-lg font-medium">每桌 1 張</p>
+                    <p class="text-sm text-gray-400 mt-1">圖畫紙</p>
+                </div>
+                <div class="w-px h-24 bg-gray-200"></div>
+                <div class="flex flex-col items-center text-center">
+                    <i data-lucide="palette" class="w-16 h-16 text-morandi-blue mb-4"></i>
+                    <p class="text-lg font-medium">每桌 1 盒</p>
+                    <p class="text-sm text-gray-400 mt-1">筆</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: 回合一 -->
+        <div class="slide justify-center">
+            <h2 class="text-3xl font-bold text-morandi-blue mb-2 text-center">回合一：我們的天氣</h2>
+            <p class="text-gray-400 tracking-widest mb-10 text-center">說出煩惱 ➔ 具象化情緒</p>
+
+            <div class="grid grid-cols-2 gap-12 max-w-5xl mx-auto w-full">
+                <!-- 步驟 1 -->
+                <div class="glass-card p-10 rounded-3xl flex flex-col h-64">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 rounded-full bg-morandi-blue/20 text-morandi-blue flex items-center justify-center font-bold text-lg">1</div>
+                        <h3 class="text-2xl font-bold">輪流開口分享</h3>
+                    </div>
+                    <p class="text-lg text-gray-600 font-light leading-relaxed">
+                        在小組內輪流分享這幾週最讓你感到「有壓力」的一件事。
+                    </p>
+                    <div class="mt-auto text-sm text-gray-400 bg-gray-50 p-3 rounded-xl border border-gray-100">
+                        💡 請記得：專注傾聽，不給建議。
+                    </div>
+                </div>
+
+                <!-- 步驟 2 -->
+                <div class="glass-card p-10 rounded-3xl flex flex-col h-64">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 rounded-full bg-morandi-blue/20 text-morandi-blue flex items-center justify-center font-bold text-lg">2</div>
+                        <h3 class="text-2xl font-bold">畫下情緒天氣圖</h3>
+                    </div>
+                    <p class="text-lg text-gray-600 font-light leading-relaxed">
+                        將剛剛分享的煩惱具象化，畫在桌上的圖畫紙上。
+                    </p>
+                    <div class="mt-auto text-sm text-gray-400 bg-gray-50 p-3 rounded-xl border border-gray-100">
+                        💡 不需要畫出具體事件，用簡單的線條、幾何或顏色表達即可。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: 4F 鷹架 (總覽說明) -->
+        <div class="slide justify-center">
+            <h2 class="text-3xl font-bold text-center mb-2 tracking-wider">畫布解碼工具：4F 提問法</h2>
+            <p class="text-center text-gray-400 mb-10 tracking-widest">像在美術館欣賞抽象畫一樣，試著交流觀察</p>
+            
+            <div class="grid grid-cols-2 gap-6 max-w-5xl mx-auto w-full">
+                <!-- Fact -->
+                <div class="glass-card p-8 rounded-3xl border-l-8 border-l-morandi-blue">
+                    <h3 class="text-2xl font-bold text-morandi-blue mb-2">Fact <span class="text-lg text-gray-400 font-light ml-2">事實</span></h3>
+                    <p class="text-gray-600 font-medium mb-2">聚焦觀察客觀樣貌</p>
+                    <p class="text-gray-500 font-light text-sm">「你們看到了哪些具體的符號或顏色？」</p>
+                </div>
+                <!-- Feeling -->
+                <div class="glass-card p-8 rounded-3xl border-l-8 border-l-morandi-pink">
+                    <h3 class="text-2xl font-bold text-morandi-pink mb-2">Feeling <span class="text-lg text-gray-400 font-light ml-2">感受</span></h3>
+                    <p class="text-gray-600 font-medium mb-2">同理當下的情緒</p>
+                    <p class="text-gray-500 font-light text-sm">「覺得作畫的人當下有什麼感覺？」</p>
+                </div>
+                <!-- Finding -->
+                <div class="glass-card p-8 rounded-3xl border-l-8 border-l-morandi-green">
+                    <h3 class="text-2xl font-bold text-morandi-green mb-2">Finding <span class="text-lg text-gray-400 font-light ml-2">發現</span></h3>
+                    <p class="text-gray-600 font-medium mb-2">尋找隱藏的意義</p>
+                    <p class="text-gray-500 font-light text-sm">「這可能傳達了什麼隱藏的掙扎或渴望？」</p>
+                </div>
+                <!-- Future -->
+                <div class="glass-card p-8 rounded-3xl border-l-8 border-l-morandi-yellow bg-morandi-yellow/5">
+                    <h3 class="text-2xl font-bold text-morandi-yellow mb-2">Future <span class="text-lg text-gray-400 font-light ml-2">未來</span></h3>
+                    <p class="text-gray-600 font-medium mb-2">給予善意與支持</p>
+                    <p class="text-gray-500 font-light text-sm">「為同學加上保護Buff或寫下鼓勵的話。」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: 回合二 (無計時版，雙欄放大) -->
+        <div class="slide justify-center">
+            <h2 class="text-3xl font-bold text-morandi-green mb-2 text-center">回合二：第一層保護Buff</h2>
+            <p class="text-gray-400 tracking-widest mb-10 text-center">順時針傳遞 ➔ 參考 4F 討論 ➔ 畫上善意</p>
+
+            <div class="grid grid-cols-2 gap-10 max-w-5xl mx-auto w-full">
+                <!-- Col 1: 操作步驟 -->
+                <div class="glass-card p-10 rounded-3xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-4 mb-6">
+                            <i data-lucide="shield" class="w-8 h-8 text-morandi-green"></i>
+                            <h3 class="text-2xl font-bold">執行步驟</h3>
+                        </div>
+                        <ol class="space-y-6 text-lg text-gray-600 font-light list-decimal pl-6">
+                            <li>將圖畫紙 <b>順時針</b> 傳給下一桌（人留在原位）。</li>
+                            <li>運用右側 <b>4F 提問法</b> 先進行小組口頭討論。</li>
+                            <li>共同在空白處為對方畫上 <b>第一層保護Buff</b>。</li>
+                        </ol>
+                    </div>
+                    <div class="mt-8 text-sm text-gray-400 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                        💡 提示：先說出觀察與感受，再動筆畫上祝福。
+                    </div>
+                </div>
+
+                <!-- Col 2: 4F 快速提示卡放大版 -->
+                <div class="glass-card p-10 rounded-3xl flex flex-col justify-center border-l-8 border-l-morandi-green bg-white">
+                    <h3 class="text-lg font-bold text-gray-400 tracking-wider mb-6">🔍 畫布解碼快速提示</h3>
+                    <div class="space-y-6 text-lg text-gray-600 font-light">
+                        <p><span class="font-medium w-20 inline-block text-morandi-blue">Fact:</span> 看到哪些具體符號或顏色？</p>
+                        <p><span class="font-medium w-20 inline-block text-morandi-pink">Feeling:</span> 作畫的人當下有什麼感覺？</p>
+                        <p><span class="font-medium w-20 inline-block text-morandi-green">Finding:</span> 隱藏的掙扎或渴望是什麼？</p>
+                        <div class="pt-4 mt-2 border-t border-gray-100">
+                            <p class="text-morandi-green font-medium"><span class="w-20 inline-block">Future:</span> 為同學加上保護Buff與鼓勵</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: 回合三 (無計時版，雙欄放大) -->
+        <div class="slide justify-center">
+            <h2 class="text-3xl font-bold text-morandi-pink mb-2 text-center">回合三：疊加保護Buff</h2>
+            <p class="text-gray-400 tracking-widest mb-10 text-center">再次傳遞 ➔ 參考 4F 討論 ➔ 疊加支持</p>
+
+            <div class="grid grid-cols-2 gap-10 max-w-5xl mx-auto w-full">
+                <!-- Col 1: 操作步驟 -->
+                <div class="glass-card p-10 rounded-3xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="flex -space-x-4">
+                                <i data-lucide="shield" class="w-8 h-8 text-morandi-green"></i>
+                                <i data-lucide="shield" class="w-8 h-8 text-morandi-pink"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold">執行步驟</h3>
+                        </div>
+                        <ol class="space-y-6 text-lg text-gray-600 font-light list-decimal pl-6">
+                            <li>畫布再次 <b>順時針</b> 漂流（此時已有上一桌的善意）。</li>
+                            <li>再次運用右側 <b>4F 提問法</b> 交流看見。</li>
+                            <li>為他們加上 <b>第二層保護Buff</b>，讓畫充滿力量。</li>
+                        </ol>
+                    </div>
+                    <div class="mt-8 text-sm text-gray-400 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                        💡 提示：看見別人的祝福，疊加更多力量。
+                    </div>
+                </div>
+
+                <!-- Col 2: 4F 快速提示卡放大版 -->
+                <div class="glass-card p-10 rounded-3xl flex flex-col justify-center border-l-8 border-l-morandi-pink bg-white">
+                    <h3 class="text-lg font-bold text-gray-400 tracking-wider mb-6">🔍 畫布解碼快速提示</h3>
+                    <div class="space-y-6 text-lg text-gray-600 font-light">
+                        <p><span class="font-medium w-20 inline-block text-morandi-blue">Fact:</span> 畫面豐富了哪些新元素？</p>
+                        <p><span class="font-medium w-20 inline-block text-morandi-pink">Feeling:</span> 感受大家傳遞的善意？</p>
+                        <p><span class="font-medium w-20 inline-block text-morandi-green">Finding:</span> 這幅畫現在傳達了什麼力量？</p>
+                        <div class="pt-4 mt-2 border-t border-gray-100">
+                            <p class="text-morandi-pink font-medium"><span class="w-20 inline-block">Future:</span> 疊加第二層保護Buff與打氣</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: 回合四 -->
+        <div class="slide justify-center items-center">
+            <h2 class="text-3xl font-bold text-morandi-yellow mb-2 text-center">回合四：歡迎回家</h2>
+            <p class="text-gray-400 tracking-widest mb-12 text-center">畫布歸位 ➔ 分享感動 ➔ 照顧清單</p>
+
+            <div class="w-full max-w-4xl glass-card p-12 rounded-3xl relative">
+                <div class="absolute -top-8 -right-8 opacity-20">
+                    <i data-lucide="heart-handshake" class="w-32 h-32 text-morandi-yellow"></i>
+                </div>
+                <ol class="space-y-8 text-2xl text-gray-600 font-light list-decimal pl-8 leading-relaxed relative z-10">
+                    <li class="pl-4">請將圖畫紙傳回最一開始的 <b class="text-morandi-text">原桌</b>。</li>
+                    <li class="pl-4">看看原本的煩惱旁，多了哪些Buff？在小組內 <b class="text-morandi-text">「分享你們現在的感受」</b>。</li>
+                    <li class="pl-4">討論完後，請在圖畫紙角落一起寫下屬於你們這組的 <b class="text-morandi-text">「自我照顧列表」</b>。<br><span class="text-lg text-gray-400">(例如：喝杯熱可可、去操場散步)</span></li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Slide 12: 全班交流 -->
+        <div class="slide justify-center items-center text-center">
+            <i data-lucide="message-circle-heart" class="w-20 h-20 text-morandi-pink mb-8"></i>
+            <h2 class="text-4xl font-bold mb-8">畫布傳回來時，<br>最印象深刻的內容是什麼？</h2>
+            <p class="text-xl text-gray-500 font-light tracking-widest">（邀請 2-3 桌同學向全班分享）</p>
+        </div>
+
+        <!-- Slide 13: 資源連結 -->
+        <div class="slide justify-center">
+            <div class="max-w-4xl mx-auto w-full glass-card p-16 rounded-[3rem] flex items-center gap-16 relative overflow-hidden">
+                <div class="absolute -right-20 -bottom-20 opacity-5"><i data-lucide="sofa" class="w-96 h-96"></i></div>
+                <div class="w-1/3">
+                    <div class="w-48 h-48 rounded-full bg-morandi-bg flex items-center justify-center shadow-inner">
+                        <i data-lucide="sofa" class="w-20 h-20 text-morandi-blue"></i>
+                    </div>
+                </div>
+                <div class="w-2/3 relative z-10">
+                    <h2 class="text-xl tracking-widest text-morandi-blue mb-2 font-medium">諮商中心</h2>
+                    <h3 class="text-4xl font-bold mb-6">校園裡的心靈客廳</h3>
+                    <p class="text-xl text-gray-600 font-light leading-relaxed">
+                        我們的心就像這張畫布，有時充滿烏雲，但總會有空間能夠上Buff。<br><br>
+                        當你覺得雨下得太大的時候，心理師會陪你一起坐在雨中，直到雨停。
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: 大腦關機練習 -->
+        <div class="slide justify-center items-center text-center bg-gray-50">
+            <h2 class="text-3xl font-light mb-4">幫大腦關機</h2>
+            <p class="text-gray-400 tracking-widest mb-20">一分鐘呼吸練習，跟著圓圈縮放調整呼吸</p>
+            
+            <div class="relative w-64 h-64 flex items-center justify-center">
+                <div class="absolute w-32 h-32 rounded-full bg-morandi-blue/30 breathe-circle"></div>
+                <div class="absolute w-24 h-24 rounded-full bg-morandi-blue/50"></div>
+                <span class="relative z-10 text-white font-medium tracking-widest text-lg drop-shadow-md">吸 / 吐</span>
+            </div>
+        </div>
+
+        <!-- Slide 15: 專屬配方 -->
+        <div class="slide justify-center items-center">
+            <h2 class="text-3xl font-bold mb-12 tracking-wider">寫下你的專屬配方</h2>
+            
+            <div class="glass-card p-12 rounded-3xl w-full max-w-3xl flex items-center justify-around">
+                <div class="flex flex-col items-center text-center w-1/2 px-8">
+                    <i data-lucide="coffee" class="w-16 h-16 text-gray-400 mb-6"></i>
+                    <h3 class="text-xl font-bold mb-2">苦澀配方</h3>
+                    <p class="text-gray-500 font-light">把你覺得有壓力的事，<br>畫成一杯苦澀的基底。</p>
+                </div>
+                <div class="w-px h-32 bg-gray-200"></div>
+                <div class="flex flex-col items-center text-center w-1/2 px-8">
+                    <i data-lucide="droplet" class="w-16 h-16 text-morandi-yellow mb-6"></i>
+                    <h3 class="text-xl font-bold mb-2">開心糖漿</h3>
+                    <p class="text-gray-500 font-light">把開心、有力量的事，<br>畫成加入的糖漿。</p>
+                </div>
+            </div>
+            <p class="text-sm text-gray-400 mt-8 tracking-widest">（請使用 A4 空白紙創作）</p>
+        </div>
+
+        <!-- Slide 16: 給未來的信 -->
+        <div class="slide justify-center items-center text-center">
+            <i data-lucide="mail" class="w-24 h-24 text-morandi-pink mb-8 stroke-1"></i>
+            <h2 class="text-4xl font-bold mb-6 tracking-widest">給未來的信</h2>
+            <p class="text-2xl text-gray-500 font-light">
+                在 A4 紙的背面，<br>寫一封信給「期末的自己」。
+            </p>
+        </div>
+
+        <!-- Slide 17: 結語 -->
+        <div class="slide items-center justify-center text-center">
+            <i data-lucide="leaf" class="w-12 h-12 text-morandi-green mb-10 opacity-50"></i>
+            <p class="text-2xl leading-loose text-gray-600 font-light max-w-2xl">
+                「以沈穩接受無法改變的事，<br>
+                以勇氣改變必須改變的事，<br>
+                以智慧分辨無法改變和必須改變的事。」
+            </p>
+            <div class="w-12 h-px bg-gray-300 my-10 mx-auto"></div>
+            <h2 class="text-xl font-bold text-morandi-text tracking-widest">感謝親愛的你，今天也好好照顧自己。</h2>
+        </div>
+
+        <!-- Controls -->
+        <button class="nav-button nav-prev" onclick="changeSlide(-1)">
+            <i data-lucide="chevron-left" class="w-6 h-6"></i>
+        </button>
+        <button class="nav-button nav-next" onclick="changeSlide(1)">
+            <i data-lucide="chevron-right" class="w-6 h-6"></i>
+        </button>
+
+        <div class="slide-number" id="slideIndicator">1 / 17</div>
+
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+    </div>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Slide Navigation Logic
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const progressBar = document.getElementById('progressBar');
+        const slideIndicator = document.getElementById('slideIndicator');
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+
+            // Update Progress and Indicator
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = `${progress}%`;
+            slideIndicator.innerText = `${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+            updateSlide();
+        }
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            }
+        });
+
+        // Initialize first slide
+        updateSlide();
+    </script>
+</body>
+</html>
